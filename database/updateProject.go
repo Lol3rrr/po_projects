@@ -6,7 +6,7 @@ import (
 
 func UpdateProject(project general.Project) {
   projectID := project.ID
-  _, err := FindProject(projectID)
+  _, err := FindProject_ID(projectID)
   if err != nil {
     insertProject(project)
   }else {
