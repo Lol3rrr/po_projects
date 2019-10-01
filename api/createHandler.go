@@ -18,8 +18,6 @@ type CreateResponse struct {
 func createHandler(w http.ResponseWriter, r *http.Request) {
   query := r.URL.Query()
 
-  fmt.Printf("Query: %+v \n", query)
-
   rawName, ok := query["name"]
   if !ok || len(rawName) <= 0 {
     w.WriteHeader(400)
