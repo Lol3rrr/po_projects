@@ -5,7 +5,10 @@ import (
   "net/http"
   "encoding/json"
 
-  
+  guuid "github.com/google/uuid"
+
+  "po_projects/general"
+  "po_projects/database"
 )
 
 type CreateResponse struct {
@@ -25,11 +28,19 @@ func CreateHandler(w http.ResponseWriter, r *http.Request) {
   }
 
   name := rawName[0]
+  id := guuid.New().String()
 
-  fmt.Printf("Name: %+v \n", name)
+  project := general.Project{
+    ID: id,
+    Name: name,
+  }
+
+  database.UpdateProject(project)
+
+  // TODO: Also add the Project to the Users Project List
 
   resp := CreateResponse{
-    ID: "test",
+    ID: id,
   }
 
   jsonResponse, err := json.Marshal(resp)

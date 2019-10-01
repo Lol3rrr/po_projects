@@ -15,4 +15,5 @@ type Project struct {
   Name  string
   Owner Project_Owner
   Parts []Project_Part
+  Tags  []string
 }
