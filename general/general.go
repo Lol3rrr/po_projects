@@ -1,19 +1,30 @@
 package general
 
 type Project_Owner struct {
-  ID    string
-  Name  string
+  ID    string `json:"id"`
+  Name  string `json:"name"`
 }
 
-type Project_Part struct {
-  Name    string
-  Content string
+type Project_Info_Part struct {
+  Name    string `json:"name"`
+  Content string `json:"content"`
+}
+
+type ProgressPoint struct {
+  Content string  `json:"content"`
+  Done    bool    `json:"done"`
+}
+
+type Project_Progress_Part struct {
+  Name  string          `json:"name"`
+  Parts []ProgressPoint `json:"progress_points"`
 }
 
 type Project struct {
-  ID    string
-  Name  string
-  Owner Project_Owner
-  Parts []Project_Part
-  Tags  []string
+  ID            string                  `json:"id"`
+  Name          string                  `json:"name"`
+  Owner         Project_Owner           `json:"owner"`
+  InfoParts     []Project_Info_Part     `json:"info_parts"`
+  ProgressParts []Project_Progress_Part `json:"progress_parts"`
+  Tags          []string                `json:"tags"`
 }
