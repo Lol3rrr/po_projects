@@ -15,7 +15,7 @@ type CreateResponse struct {
   ID string `json:"id"`
 }
 
-func CreateHandler(w http.ResponseWriter, r *http.Request) {
+func createHandler(w http.ResponseWriter, r *http.Request) {
   query := r.URL.Query()
 
   fmt.Printf("Query: %+v \n", query)
