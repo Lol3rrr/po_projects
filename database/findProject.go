@@ -8,7 +8,7 @@ import (
   "po_projects/general"
 )
 
-func FindProject(projectID string) (general.Project, error) {
+func FindProject_ID(projectID string) (general.Project, error) {
   collection := client.Database(dataBaseName).Collection(collectionName)
   var result general.Project
 

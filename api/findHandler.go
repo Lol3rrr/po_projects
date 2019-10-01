@@ -26,8 +26,18 @@ func sendResult(result FindResponse, w http.ResponseWriter) {
 }
 
 func findUsingID(id string, w http.ResponseWriter) {
+  project, err := database.FindProject_ID(id)
+  if err != nil {
+    w.WriteHeader(400)
+
+    return
+  }
+
+  result := make([]general.Project, 1)
+  result[0] = project
+
   resp := FindResponse{
-    Results: make([]general.Project, 0),
+    Results: result,
   }
 
   sendResult(resp, w)
