@@ -23,5 +23,7 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
+  // TODO: Remove the Project from the Users project list as well
+
   w.WriteHeader(200)
 }
