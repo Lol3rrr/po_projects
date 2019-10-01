@@ -28,7 +28,6 @@ func findUsingID(id string, w http.ResponseWriter) {
   project, err := database.FindProject_ID(id)
   if err != nil {
     w.WriteHeader(400)
-
     return
   }
 
@@ -43,8 +42,14 @@ func findUsingID(id string, w http.ResponseWriter) {
 }
 
 func findUsingName(name string, w http.ResponseWriter) {
+  result, err := database.FindProjects_Name(name)
+  if err != nil {
+    w.WriteHeader(400)
+    return
+  }
+
   resp := FindResponse{
-    Results: make([]general.Project, 0),
+    Results: result,
   }
 
   sendResult(resp, w)
