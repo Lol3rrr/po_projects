@@ -1,7 +1,6 @@
 package userService
 
 import (
-  "fmt"
   "net/http"
 )
 
@@ -18,8 +17,6 @@ func AddProject(sessionID, projectID, projectName string) (bool, error) {
   q.Add("project_id", projectID)
   q.Add("project_name", projectName)
   req.URL.RawQuery = q.Encode()
-
-  fmt.Printf("Req URL: '%s' \n", req.URL.String())
 
   client := http.Client{
     Timeout: defaultTimeout,
