@@ -8,6 +8,7 @@ import (
 
   "po_projects/general"
   "po_projects/database"
+  "po_projects/userService"
 )
 
 type CreateResponse struct {
@@ -17,10 +18,15 @@ type CreateResponse struct {
 func createHandler(w http.ResponseWriter, r *http.Request) {
   query := r.URL.Query()
 
+  sessionID, worked := getSessionID(query)
+  if !worked {
+    w.WriteHeader(400)
+    return
+  }
+
   rawName, ok := query["name"]
   if !ok || len(rawName) <= 0 {
     w.WriteHeader(400)
-
     return
   }
 
@@ -34,7 +40,11 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 
   database.UpdateProject(project)
 
-  // TODO: Also add the Project to the Users Project List
+  worked, err := userService.AddProject(sessionID, id, name)
+  if err != nil || !worked {
+    w.WriteHeader(400)
+    return
+  }
 
   resp := CreateResponse{
     ID: id,
