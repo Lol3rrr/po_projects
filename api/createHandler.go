@@ -18,12 +18,11 @@ type CreateResponse struct {
 func createHandler(w http.ResponseWriter, r *http.Request) {
   query := r.URL.Query()
 
-  rawSessionID, s_ok := query["sessionID"]
-  if !s_ok || len(rawSessionID) <= 0 {
+  sessionID, worked := getSessionID(query)
+  if !worked {
     w.WriteHeader(400)
     return
   }
-  sessionID := rawSessionID[0]
 
   rawName, ok := query["name"]
   if !ok || len(rawName) <= 0 {
@@ -41,7 +40,6 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 
   database.UpdateProject(project)
 
-  // TODO: Also add the Project to the Users Project List
   worked, err := userService.AddProject(sessionID, id, name)
   if err != nil || !worked {
     w.WriteHeader(400)
