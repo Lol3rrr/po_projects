@@ -2,7 +2,6 @@ package general
 
 type Project_Owner struct {
   ID    string `json:"id"`
-  Name  string `json:"name"`
 }
 
 type Project_Info_Part struct {
