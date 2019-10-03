@@ -33,14 +33,25 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
   name := rawName[0]
   id := guuid.New().String()
 
+  user, err := userService.FetchUser(sessionID)
+  if err != nil {
+    w.WriteHeader(400)
+    return
+  }
+
+  owner := general.Project_Owner{
+    ID: user.ID,
+  }
+
   project := general.Project{
     ID: id,
     Name: name,
+    Owner: owner,
   }
 
   database.UpdateProject(project)
 
-  worked, err := userService.AddProject(sessionID, id, name)
+  worked, err = userService.AddProject(sessionID, id, name)
   if err != nil || !worked {
     w.WriteHeader(400)
     return
