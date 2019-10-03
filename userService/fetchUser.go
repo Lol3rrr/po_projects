@@ -40,10 +40,17 @@ func FetchUser(sessionID string) (User, error) {
     return result, err
   }
 
-  err = json.Unmarshal(content, &result)
+  type ResponseUser struct {
+    User User `json:"user"`
+  }
+  var respUser ResponseUser
+
+  err = json.Unmarshal(content, &respUser)
   if err != nil {
     return result, err
   }
+
+  result = respUser.User
 
   return result, nil
 }
