@@ -105,12 +105,22 @@ func saveTextHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  nItemID := saveTextPartToProject(&project, reqBody.Name, reqBody.Content, itemID)
+  if itemID == "" {
+    itemID = guuid.New().String()
+  }
+
+  textPart := general.Project_Text_Part {
+    ID: itemID,
+    Name: reqBody.Name,
+    Content: reqBody.Content,
+  }
+
+  project.AddTextPart(textPart)
 
   database.UpdateProject(project)
 
   resp := AddResponse{
-    ID: nItemID,
+    ID: itemID,
   }
 
   sendSuccessResult(resp, w)
