@@ -34,6 +34,37 @@ func getBody(req *http.Request) (AddRequest, error) {
   return reqBody, nil
 }
 
+func saveTextPartToProject(project *general.Project, name, content, itemID string) (string) {
+  if project.TextParts == nil {
+    project.TextParts = make([]general.Project_Text_Part, 0)
+  }
+
+  id := guuid.New().String()
+
+  textPart := general.Project_Text_Part {
+    ID: id,
+    Name: name,
+    Content: content,
+  }
+
+  updated := false
+  for _, tmpPart := range project.TextParts {
+    if tmpPart.ID == itemID {
+      id = tmpPart.ID
+      tmpPart.Name = name
+      tmpPart.Content = content
+
+      updated = true
+    }
+  }
+
+  if !updated {
+    project.TextParts = append(project.TextParts, textPart)
+  }
+
+  return id
+}
+
 func saveTextHandler(w http.ResponseWriter, r *http.Request) {
   query := r.URL.Query()
 
@@ -57,14 +88,6 @@ func saveTextHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  id := guuid.New().String()
-
-  textPart := general.Project_Text_Part {
-    ID: id,
-    Name: reqBody.Name,
-    Content: reqBody.Content,
-  }
-
   project, err := database.FindProject_ID(projectID)
   if err != nil {
     w.WriteHeader(400)
@@ -82,29 +105,12 @@ func saveTextHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  if project.TextParts == nil {
-    project.TextParts = make([]general.Project_Text_Part, 0)
-  }
-
-  updated := false
-  for _, tmpPart := range project.TextParts {
-    if tmpPart.ID == itemID {
-      id = tmpPart.ID
-      tmpPart.Name = reqBody.Name
-      tmpPart.Content = reqBody.Content
-
-      updated = true
-    }
-  }
-
-  if !updated {
-    project.TextParts = append(project.TextParts, textPart)
-  }
+  nItemID := saveTextPartToProject(&project, reqBody.Name, reqBody.Content, itemID)
 
   database.UpdateProject(project)
 
   resp := AddResponse{
-    ID: id,
+    ID: nItemID,
   }
 
   sendSuccessResult(resp, w)
