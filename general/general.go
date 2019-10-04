@@ -19,6 +19,15 @@ type Project_Progress_Part struct {
   Parts []ProgressPoint `json:"progress_points"`
 }
 
+type ListPoints struct {
+  Content string `json:"content"`
+}
+
+type Project_List_Part struct {
+  Name  string        `json:"name"`
+  Parts []ListPoints  `json:"list_points"`
+}
+
 type Project struct {
   ID            string                  `json:"id"`
   Name          string                  `json:"name"`
