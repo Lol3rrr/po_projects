@@ -11,7 +11,7 @@ func StartAPI(port string) {
   r.HandleFunc("/create", createHandler).Methods("POST")
   r.HandleFunc("/delete", deleteHandler).Methods("POST")
 
-  r.HandleFunc("/find", findHandler).Methods("GET")
+  r.HandleFunc("/load", findHandler).Methods("GET")
   http.Handle("/", r)
 
   http.ListenAndServe(port, nil)
