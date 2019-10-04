@@ -9,7 +9,7 @@ import (
 )
 
 type FindResponse struct {
-  Results []general.Project `json:"results"`
+  Project general.Project `json:"project"`
 }
 
 func sendResult(result FindResponse, w http.ResponseWriter) {
@@ -31,11 +31,8 @@ func findUsingID(id string, w http.ResponseWriter) {
     return
   }
 
-  result := make([]general.Project, 1)
-  result[0] = project
-
   resp := FindResponse{
-    Results: result,
+    Project: project,
   }
 
   sendResult(resp, w)
