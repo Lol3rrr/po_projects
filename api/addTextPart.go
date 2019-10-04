@@ -8,6 +8,7 @@ import (
 
   "po_projects/general"
   "po_projects/database"
+  "po_projects/userService"
 )
 
 type AddResponse struct {
@@ -55,8 +56,19 @@ func addTextHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
+  user, err := userService.FetchUser(sessionID)
+  if err != nil {
+    w.WriteHeader(400)
+    return
+  }
+
+  if !project.IsOwner(user.ID) {
+    w.WriteHeader(400)
+    return
+  }
+
   if project.TextParts == nil {
-    project.TextParts = make([]Project_Text_Part, 0)
+    project.TextParts = make([]general.Project_Text_Part, 0)
   }
 
   project.TextParts = append(project.TextParts, textPart)
