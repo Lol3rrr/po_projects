@@ -4,7 +4,7 @@ type Project_Owner struct {
   ID    string `json:"id"`
 }
 
-type Project_Info_Part struct {
+type Project_Text_Part struct {
   Name    string `json:"name"`
   Content string `json:"content"`
 }
@@ -32,7 +32,8 @@ type Project struct {
   ID            string                  `json:"id"`
   Name          string                  `json:"name"`
   Owner         Project_Owner           `json:"owner"`
-  InfoParts     []Project_Info_Part     `json:"info_parts"`
+  TextParts     []Project_Text_Part     `json:"text_parts"`
+  ListParts     []Project_List_Part     `json:"list_parts"`
   ProgressParts []Project_Progress_Part `json:"progress_parts"`
   Tags          []string                `json:"tags"`
 }
