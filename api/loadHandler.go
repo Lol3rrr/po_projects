@@ -2,7 +2,6 @@ package api
 
 import (
   "net/http"
-  "encoding/json"
 
   "po_projects/general"
   "po_projects/database"
@@ -10,18 +9,6 @@ import (
 
 type FindResponse struct {
   Project general.Project `json:"project"`
-}
-
-func sendResult(result FindResponse, w http.ResponseWriter) {
-  jsonResponse, err := json.Marshal(result)
-  if err != nil {
-    w.WriteHeader(400)
-
-    return
-  }
-
-  w.WriteHeader(200)
-  w.Write(jsonResponse)
 }
 
 func findUsingID(id string, w http.ResponseWriter) {
@@ -35,7 +22,7 @@ func findUsingID(id string, w http.ResponseWriter) {
     Project: project,
   }
 
-  sendResult(resp, w)
+  sendSuccessResult(resp, w)
 }
 
 

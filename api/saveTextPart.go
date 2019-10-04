@@ -20,7 +20,21 @@ type AddRequest struct {
   Content string `json:"content"`
 }
 
-func addTextHandler(w http.ResponseWriter, r *http.Request) {
+func getBody(req *http.Request) (AddRequest, error) {
+  var reqBody AddRequest
+
+  defer req.Body.Close()
+  decoder := json.NewDecoder(req.Body)
+
+  err := decoder.Decode(&reqBody)
+  if err != nil {
+    return reqBody, err
+  }
+
+  return reqBody, nil
+}
+
+func saveTextHandler(w http.ResponseWriter, r *http.Request) {
   query := r.URL.Query()
 
   sessionID, found := getQueryElement(query, "sessionID")
@@ -29,23 +43,24 @@ func addTextHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  projectID, found := getQueryElement(query, "id")
+  projectID, found := getQueryElement(query, "projectID")
   if !found {
     w.WriteHeader(400)
     return
   }
 
-  defer r.Body.Close()
-  decoder := json.NewDecoder(r.Body)
-  var reqBody AddRequest
-  err := decoder.Decode(&reqBody)
+  itemID, found := getQueryElement(query, "itemID")
+
+  reqBody, err := getBody(r)
   if err != nil {
     w.WriteHeader(400)
     return
   }
 
+  id := guuid.New().String()
+
   textPart := general.Project_Text_Part {
-    ID: guuid.New().String(),
+    ID: id,
     Name: reqBody.Name,
     Content: reqBody.Content,
   }
@@ -71,21 +86,26 @@ func addTextHandler(w http.ResponseWriter, r *http.Request) {
     project.TextParts = make([]general.Project_Text_Part, 0)
   }
 
-  project.TextParts = append(project.TextParts, textPart)
+  updated := false
+  for _, tmpPart := range project.TextParts {
+    if tmpPart.ID == itemID {
+      id = tmpPart.ID
+      tmpPart.Name = reqBody.Name
+      tmpPart.Content = reqBody.Content
+
+      updated = true
+    }
+  }
+
+  if !updated {
+    project.TextParts = append(project.TextParts, textPart)
+  }
 
   database.UpdateProject(project)
 
   resp := AddResponse{
-    ID: textPart.ID,
+    ID: id,
   }
 
-  jsonResponse, err := json.Marshal(resp)
-  if err != nil {
-    w.WriteHeader(400)
-
-    return
-  }
-
-  w.WriteHeader(200)
-  w.Write(jsonResponse)
+  sendSuccessResult(resp, w)
 }

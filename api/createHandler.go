@@ -2,7 +2,6 @@ package api
 
 import (
   "net/http"
-  "encoding/json"
 
   guuid "github.com/google/uuid"
 
@@ -61,13 +60,5 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
     ID: id,
   }
 
-  jsonResponse, err := json.Marshal(resp)
-  if err != nil {
-    w.WriteHeader(400)
-
-    return
-  }
-
-  w.WriteHeader(200)
-  w.Write(jsonResponse)
+  sendSuccessResult(resp, w)
 }
