@@ -11,17 +11,17 @@ import (
   "po_projects/userService"
 )
 
-type AddTextResponse struct {
+type AddListResponse struct {
   ID string `json:"id"`
 }
 
-type AddTextRequest struct {
+type AddListRequest struct {
   Name string `json:"name"`
-  Content string `json:"content"`
+  Items []string `json:"items"`
 }
 
-func getTextBody(req *http.Request) (AddTextRequest, error) {
-  var reqBody AddTextRequest
+func getListBody(req *http.Request) (AddListRequest, error) {
+  var reqBody AddListRequest
 
   defer req.Body.Close()
   decoder := json.NewDecoder(req.Body)
@@ -34,7 +34,7 @@ func getTextBody(req *http.Request) (AddTextRequest, error) {
   return reqBody, nil
 }
 
-func saveTextHandler(w http.ResponseWriter, r *http.Request) {
+func saveListHandler(w http.ResponseWriter, r *http.Request) {
   query := r.URL.Query()
 
   sessionID, found := getQueryElement(query, "sessionID")
@@ -51,7 +51,7 @@ func saveTextHandler(w http.ResponseWriter, r *http.Request) {
 
   itemID, found := getQueryElement(query, "itemID")
 
-  reqBody, err := getTextBody(r)
+  reqBody, err := getListBody(r)
   if err != nil {
     w.WriteHeader(400)
     return
@@ -78,17 +78,26 @@ func saveTextHandler(w http.ResponseWriter, r *http.Request) {
     itemID = guuid.New().String()
   }
 
-  textPart := general.Project_Text_Part {
-    ID: itemID,
-    Name: reqBody.Name,
-    Content: reqBody.Content,
+  parts := make([]general.ListPoint, 0)
+  for _, tmpPart := range reqBody.Items {
+    tmp := general.ListPoint {
+      Content: tmpPart,
+    }
+
+    parts = append(parts, tmp)
   }
 
-  project.AddTextPart(textPart)
+  listPart := general.Project_List_Part {
+    ID: itemID,
+    Name: reqBody.Name,
+    Parts: parts,
+  }
+
+  project.AddListPart(listPart)
 
   database.UpdateProject(project)
 
-  resp := AddTextResponse{
+  resp := AddListResponse{
     ID: itemID,
   }
 
