@@ -15,6 +15,7 @@ func StartAPI(port string) {
   r.HandleFunc("/delete/text", deleteTextHandler).Methods("POST")
 
   r.HandleFunc("/save/list", saveListHandler).Methods("POST")
+  r.HandleFunc("/delete/list", deleteListHandler).Methods("POST")
 
   r.HandleFunc("/load", loadHandler).Methods("GET")
   http.Handle("/", r)
