@@ -5,7 +5,7 @@ type Project_Owner struct {
 }
 
 type Project_Text_Part struct {
-  ID      string `json:id`
+  ID      string `json:"id"`
   Name    string `json:"name"`
   Content string `json:"content"`
 }
@@ -28,7 +28,7 @@ type ListPoint struct {
 type Project_List_Part struct {
   ID    string        `json:"id"`
   Name  string        `json:"name"`
-  Parts []ListPoint  `json:"list_points"`
+  Parts []ListPoint   `json:"list_points"`
 }
 
 type Project struct {
