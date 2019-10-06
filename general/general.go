@@ -10,15 +10,15 @@ type Project_Text_Part struct {
   Content string `json:"content"`
 }
 
-type ProgressPoint struct {
-  Content string  `json:"content"`
+type TodoPoint struct {
   Done    bool    `json:"done"`
+  Content string  `json:"content"`
 }
 
-type Project_Progress_Part struct {
-  ID    string          `json:"id"`
-  Name  string          `json:"name"`
-  Parts []ProgressPoint `json:"progress_points"`
+type Project_Todo_Part struct {
+  ID    string      `json:"id"`
+  Name  string      `json:"name"`
+  Parts []TodoPoint `json:"todo_points"`
 }
 
 type ListPoint struct {
@@ -32,11 +32,11 @@ type Project_List_Part struct {
 }
 
 type Project struct {
-  ID            string                  `json:"id"`
-  Name          string                  `json:"name"`
-  Owner         Project_Owner           `json:"owner"`
-  TextParts     []Project_Text_Part     `json:"text_parts"`
-  ListParts     []Project_List_Part     `json:"list_parts"`
-  ProgressParts []Project_Progress_Part `json:"progress_parts"`
-  Tags          []string                `json:"tags"`
+  ID        string              `json:"id"`
+  Name      string              `json:"name"`
+  Owner     Project_Owner       `json:"owner"`
+  TextParts []Project_Text_Part `json:"text_parts"`
+  ListParts []Project_List_Part `json:"list_parts"`
+  TodoParts []Project_Todo_Part `json:"todo_parts"`
+  Tags      []string            `json:"tags"`
 }

@@ -29,3 +29,18 @@ func (project *Project) IndexOfListPart(listID string) (int) {
 
   return -1
 }
+
+func (project *Project) IndexOfTodoPart(todoID string) (int) {
+  if project.TodoParts == nil {
+    project.TodoParts = make([]Project_Todo_Part, 0)
+    return -1
+  }
+
+  for index, tmpValue := range project.TodoParts {
+    if tmpValue.ID == todoID {
+      return index
+    }
+  }
+
+  return -1
+}

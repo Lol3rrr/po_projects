@@ -27,3 +27,17 @@ func (project *Project) AddListPart(part Project_List_Part) {
 
   project.ListParts[index] = part
 }
+
+func (project *Project) AddTodoPart(part Project_Todo_Part) {
+  if project.TodoParts == nil {
+    project.TodoParts = make([]Project_Todo_Part, 0)
+  }
+
+  index := project.IndexOfTodoPart(part.ID)
+  if index == -1 {
+    project.TodoParts = append(project.TodoParts, part)
+    return
+  }
+
+  project.TodoParts[index] = part
+}
