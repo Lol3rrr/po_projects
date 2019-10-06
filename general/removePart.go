@@ -17,3 +17,12 @@ func (project *Project) RemoveListPart(itemID string) {
 
   project.ListParts = append(project.ListParts[:index], project.ListParts[index+1:]...)
 }
+
+func (project *Project) RemoveTodoPart(itemID string) {
+  index := project.IndexOfTodoPart(itemID)
+  if index == -1 {
+    return
+  }
+
+  project.TodoParts = append(project.TodoParts[:index], project.TodoParts[index+1:]...)
+}
